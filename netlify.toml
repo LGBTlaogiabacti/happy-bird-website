@@ -1,0 +1,72 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Node 18+ is required (global fetch/Request/Response, Netlify Blobs).
+[build.environment]
+  NODE_VERSION = "20"
+
+# ---- Hidden admin routes (no public link points here) -------------------------
+[[redirects]]
+  from = "/new/releases"
+  to = "/admin.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/new/releases/"
+  to = "/admin.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/new/base"
+  to = "/admin.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/new/base/"
+  to = "/admin.html"
+  status = 200
+  force = true
+
+# ---- Headers ---------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/admin.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    X-Frame-Options = "DENY"
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/new/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    X-Frame-Options = "DENY"
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+[[headers]]
+  for = "/vendor/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
